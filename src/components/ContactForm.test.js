@@ -1,35 +1,41 @@
 import React from 'react'
-import { render, screen, fireEvent, act } from '@testing-library/react'
+import { render, screen, fireEvent, act, waitFor } from '@testing-library/react'
 import ContactForm from './ContactForm'
 
 test('Renders ContactForm without errors', () => {
     render(<ContactForm/>)
 })
 
-test('Check form inputs and submit button', () => {
+test('Check form inputs and submit button', async () => {
     render(<ContactForm/>)
 
+    //Act:
     const firstname = screen.getByLabelText(/first name/i);
     const lastname = screen.getByLabelText(/last name/i);
     const email = screen.getByLabelText(/email/i);
     const message = screen.getByLabelText(/message/i);
-    const submit = screen.getByRole("button");
 
-    act(() => {
-        fireEvent.change(firstname, {target: {value: 'Edd', name:'firstName'}})
-        expect(firstname).toHaveValue('Edd')
+    // add text to fields
+    fireEvent.change(firstname, {target: {value: 'Johnny', name:'firstName'}})
+    fireEvent.change(lastname, {target: {value:'Xiong', name:'lastName'}})
+    fireEvent.change(email, {target: {value:'123@gmail.com', name:'email'}})
+    fireEvent.change(message, {target: {value:'Hello', name:'message'}})
 
-        fireEvent.change(lastname, {target: {value:'Burke', name:'lastName'}})
-        expect(lastname).toHaveValue('Burke')
+    // Click button
+    const submit = screen.getByTestId('button')
+    fireEvent.click(submit)
 
-        fireEvent.change(email, {target: {value:'123@gmail.com', name:'email'}})
+    // Assert: 
+    await waitFor(() => {
+        expect(firstname).toHaveValue('Johnny')
+        expect(lastname).toHaveValue('Xiong')
         expect(email).toHaveValue('123@gmail.com')
-
-        fireEvent.change(message, {target: {value:'Hello', name:'message'}})
         expect(message).toHaveValue('Hello')
     })
-    // act(() => {
-    //     fireEvent.click(submit)
-    //     expect
-    // })
+
+
+    const output = screen.getByText('Johnny')
+    // console.log(output)
+    // expect(output).toHaveTextContent(/Edd/i)
+
 } )
