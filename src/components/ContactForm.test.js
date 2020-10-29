@@ -34,8 +34,7 @@ test('Check form inputs and submit button', async () => {
     })
 
 
-    const output = screen.getByText('Johnny')
-    // console.log(output)
-    // expect(output).toHaveTextContent(/Edd/i)
+    const output = screen.getByText(/johnny/i)
+    expect(output).toHaveTextContent(/Xiong/i)
 
 } )
